@@ -1,0 +1,132 @@
+model,id,difficulty,correct,reason,sql
+GPT-5.6 Terra,1,hard,True,match,"SELECT SUM(d.total_runs) * 1.0 / COUNT(DISTINCT m.id)
+FROM matches AS m
+JOIN deliveries AS d ON d.match_id = m.id"
+GPT-5.6 Terra,2,hard,False,mismatch,"SELECT
+  batter,
+  ROUND(
+    100.0 * SUM(CASE WHEN batsman_runs IN (4, 6) THEN batsman_runs ELSE 0 END)
+    / SUM(batsman_runs),
+    2
+  ) AS boundary_percentage
+FROM deliveries
+GROUP BY batter
+HAVING SUM(batsman_runs) >= 500
+ORDER BY boundary_percentage DESC
+LIMIT 1"
+GPT-5.6 Terra,3,hard,True,match,"SELECT COUNT(*)
+FROM (
+  SELECT batter
+  FROM deliveries
+  GROUP BY batter
+  HAVING SUM(batsman_runs) >= 1000
+)"
+GPT-5.6 Terra,4,hard,True,match,"SELECT
+  bowler,
+  COUNT(*) AS ball_count
+FROM deliveries
+WHERE extras_type IS NULL
+   OR extras_type NOT IN ('wides', 'noballs')
+GROUP BY bowler
+ORDER BY ball_count DESC
+LIMIT 1"
+GPT-5.6 Terra,5,hard,True,match,"SELECT
+  batter,
+  SUM(batsman_runs) AS runs
+FROM deliveries
+GROUP BY match_id, batter
+ORDER BY runs DESC
+LIMIT 1"
+GPT-5.6 Terra,6,hard,True,match,"WITH first_innings AS (
+  SELECT match_id, batting_team
+  FROM deliveries
+  WHERE inning = 1
+  GROUP BY match_id, batting_team
+)
+SELECT m.winner AS team, COUNT(*) AS wins
+FROM matches AS m
+JOIN first_innings AS f
+  ON m.id = f.match_id
+WHERE m.winner IS NOT NULL
+  AND m.winner <> f.batting_team
+GROUP BY m.winner
+ORDER BY wins DESC
+LIMIT 1"
+GPT-5.6 Terra,7,hard,True,match,"SELECT SUM(total_runs) AS total_powerplay_runs
+FROM deliveries
+WHERE ""over"" BETWEEN 0 AND 5"
+GPT-5.6 Terra,8,hard,True,match,"SELECT
+  batter,
+  SUM(batsman_runs) AS runs
+FROM deliveries
+WHERE ""over"" BETWEEN 15 AND 19
+GROUP BY batter
+ORDER BY runs DESC
+LIMIT 1"
+GPT-5.6 Terra,9,brutal,True,match,"WITH batter_stats AS (
+  SELECT
+    batter,
+    SUM(batsman_runs) AS runs,
+    SUM(CASE WHEN extras_type IS NOT 'wides' THEN 1 ELSE 0 END) AS legal_balls
+  FROM deliveries
+  GROUP BY batter
+)
+SELECT
+  batter,
+  runs * 100.0 / legal_balls AS strike_rate
+FROM batter_stats
+WHERE runs >= 300
+  AND legal_balls > 0
+ORDER BY strike_rate DESC
+LIMIT 1"
+GPT-5.6 Terra,10,brutal,False,gen_error,
+GPT-5.6 Terra,11,brutal,False,gen_error,
+GPT-5.6 Terra,12,brutal,False,gen_error,
+GPT-5.6 Terra,13,brutal,False,gen_error,
+GPT-5.6 Terra,14,brutal,False,gen_error,
+GPT-5.6 Terra,15,brutal,False,gen_error,
+GPT-5.6 Terra,16,brutal,False,gen_error,
+GPT-5.6 Terra,17,brutal,False,gen_error,
+GPT-5.6 Terra,18,brutal,False,gen_error,
+GPT-5.6 Terra,19,brutal,False,gen_error,
+GPT-5.6 Terra,20,brutal,False,gen_error,
+Kimi K3,1,hard,False,gen_error,
+Kimi K3,2,hard,False,gen_error,
+Kimi K3,3,hard,False,gen_error,
+Kimi K3,4,hard,False,gen_error,
+Kimi K3,5,hard,False,gen_error,
+Kimi K3,6,hard,False,gen_error,
+Kimi K3,7,hard,False,gen_error,
+Kimi K3,8,hard,False,gen_error,
+Kimi K3,9,brutal,False,gen_error,
+Kimi K3,10,brutal,False,gen_error,
+Kimi K3,11,brutal,False,gen_error,
+Kimi K3,12,brutal,False,gen_error,
+Kimi K3,13,brutal,False,gen_error,
+Kimi K3,14,brutal,False,gen_error,
+Kimi K3,15,brutal,False,gen_error,
+Kimi K3,16,brutal,False,gen_error,
+Kimi K3,17,brutal,False,gen_error,
+Kimi K3,18,brutal,False,gen_error,
+Kimi K3,19,brutal,False,gen_error,
+Kimi K3,20,brutal,False,gen_error,
+Grok 4.5,1,hard,False,gen_error,
+Grok 4.5,2,hard,False,gen_error,
+Grok 4.5,3,hard,False,gen_error,
+Grok 4.5,4,hard,False,gen_error,
+Grok 4.5,5,hard,False,gen_error,
+Grok 4.5,6,hard,False,gen_error,
+Grok 4.5,7,hard,False,gen_error,
+Grok 4.5,8,hard,False,gen_error,
+Grok 4.5,9,brutal,False,gen_error,
+Grok 4.5,10,brutal,False,gen_error,
+Grok 4.5,11,brutal,False,gen_error,
+Grok 4.5,12,brutal,False,gen_error,
+Grok 4.5,13,brutal,False,gen_error,
+Grok 4.5,14,brutal,False,gen_error,
+Grok 4.5,15,brutal,False,gen_error,
+Grok 4.5,16,brutal,False,gen_error,
+Grok 4.5,17,brutal,False,gen_error,
+Grok 4.5,18,brutal,False,gen_error,
+Grok 4.5,19,brutal,False,gen_error,
+Grok 4.5,20,brutal,False,gen_error,
