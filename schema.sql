@@ -43,3 +43,4 @@ CREATE TABLE "deliveries" (
   "dismissal_kind" TEXT,
   "fielder" TEXT
 );
+
